@@ -1,5 +1,4 @@
-## Compile:
-	`python setup.py build`
-
-## Run:
-	`python decision_tree.py`
+#### Compile:
+`python setup.py build` 
+#### Run:
+`python decision_tree.py`
