@@ -134,7 +134,7 @@ Node split(Node next_node, vector<vector<double>> data, int max_depth, int min_s
 	MajorLabel majorLbl;
 
 	// check data not all same class, if so leaf
-	majorLbl = get_major_label(data, lbl);
+	majorLbl = get_major_label(data, lbl);               
 	if (majorLbl.class_count.size() == 1) {
 		next_node = assign_values_node(next_node, data, true, 0, lbl);
 		return next_node;

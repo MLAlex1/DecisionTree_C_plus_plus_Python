@@ -15,7 +15,7 @@ class DecisionTree:
 	def fit(self, X, y, print_tree=False):
 		"""
 		X : Dataframe of features
-		y : DataFrame labels
+		y : Series of labels
 		"""
 		X = pd.concat([X, y], axis=1)
 		# we need to have a numpy contiguous array to pass into the C++ fit function
@@ -30,9 +30,8 @@ class DecisionTree:
 		doublePtrArr = self.doublePtr * ct_arr._length_
 		ct_ptr = ctypes.cast(doublePtrArr(*(ctypes.cast(row, self.doublePtr) for row in ct_arr)), self.doublePtrPtr)
 
-		# define outputs types
+		# define C++ class initialiser outputs types
 		mylib.new_tree.restype = ctypes.c_void_p
-		mylib.predict.restype = ctypes.POINTER(ctypes.c_size_t * 150)
 
 		# define input types
 		mylib.new_tree.argtypes = [ctypes.c_int, ctypes.c_int]
@@ -47,6 +46,11 @@ class DecisionTree:
 		X : Dataframe of features
 		"""
 		array = np.ascontiguousarray(X.values[:,:], np.double)
+
+		# define predict outputs types (we need to define it every time to output the 
+		# right number of elements we are predicting)
+		mylib.predict.restype = ctypes.POINTER(ctypes.c_size_t * array.shape[0])
+
 		ct_arr = np.ctypeslib.as_ctypes(array)
 
 		doublePtrArr = self.doublePtr * ct_arr._length_
@@ -59,7 +63,7 @@ class DecisionTree:
 
 
 # find the shared library compiled after running setup.py
-libfile = r"build\lib.win-amd64-3.7\decision_tree.dll"
+libfile = r"build\lib.win-amd64-3.7\decision_tree.pyd"
 mylib = ctypes.CDLL(libfile)
 
 data = pd.read_csv(r"data\setosa.txt", sep="\t")
