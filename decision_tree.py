@@ -7,13 +7,21 @@ import ipdb
 
 class DecisionTree:
 
-	def __init__(self, max_depth=4, min_size=2):
+	def __init__(self, max_depth : int = 4, min_size : int = 2):
+		"""
+		Parameters
+		----------
+		max_depth : maximum depth of the tree
+		min_size : minimum size of the tree
+		"""
 		
 		self.max_depth = max_depth
 		self.min_size = min_size
 
-	def fit(self, X, y, print_tree=False):
+	def fit(self, X : pd.DataFrame, y : pd.Series, print_tree=False):
 		"""
+		Parameters
+		----------
 		X : Dataframe of features
 		y : Series of labels
 		"""
@@ -41,9 +49,15 @@ class DecisionTree:
 		self.tree_obj = mylib.new_tree(self.max_depth, self.min_size)
 		mylib.fit_tree(self.tree_obj, ct_ptr, array.shape[0], array.shape[1], print_tree)
 
-	def predict(self, X):
+	def predict(self, X : pd.DataFrame) -> np.array:
 		"""
+		Parameters
+		----------
 		X : Dataframe of features
+
+		Returns 
+		-------
+		predictions : ndarray of shape (n_samples, 1)
 		"""
 		array = np.ascontiguousarray(X.values[:,:], np.double)
 
